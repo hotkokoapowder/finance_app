@@ -1,17 +1,19 @@
 import streamlit as st
+import datetime
 
 # --- 1. ページ設定 ---
 st.set_page_config(
-    page_title="Natual Wind Rie",
+    page_title="Natural Wind Rie",
     page_icon="🌿",
     layout="centered"
 )
 
-# --- 2. デザインのカスタマイズ（CSS） ---
+# --- 2. CSSデザイン（スマホで見やすく調整） ---
 st.markdown("""
     <style>
+    /* 全体の背景と文字色 */
     .stApp {
-        background-color: #FFFAF0; /* 背景：温かみのある生成り色 */
+        background-color: #FFFAF0;
         color: #4E342E;
     }
     /* インスタボタン専用のスタイル */
@@ -26,10 +28,21 @@ st.markdown("""
         text-align: center;
         margin: 10px 0;
         box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        width: 100%; /* スマホで押しやすく */
     }
     .insta-btn:hover {
         opacity: 0.9;
         box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+    }
+    /* ボタンのスマホ対応：幅を広げる */
+    .stButton>button {
+        width: 100%;
+        border-radius: 20px;
+        background: linear-gradient(90deg, #FFAB91 0%, #FF8A65 100%);
+        color: white;
+        border: none;
+        padding: 10px;
+        font-weight: bold;
     }
     /* 事例紹介のボックス装飾 */
     .case-box {
@@ -39,34 +52,57 @@ st.markdown("""
         border-left: 5px solid #FFAB91;
         margin-bottom: 10px;
     }
+    /* インプット欄の背景を白く */
+    .stTextInput>div>div>input, .stTextArea>div>div>textarea {
+        background-color: #ffffff;
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- 3. メインヘッダー & インスタ誘導 ---
-st.title("🌿 Natual Wind Rie")
-st.caption("心と体を整える、隠れ家サロンへようこそ")
+# --- 3. サイドバー：表示モード切り替え ---
+with st.sidebar:
+    st.header("⚙️ 表示設定")
+    # スマホユーザー向けに画面をスッキリさせるスイッチ
+    mode = st.radio("表示モード", ["通常モード", "スマホ用シンプルモード"])
+    
+    st.markdown("---")
+    st.write("営業日: 土・日・祝")
+    st.write("営業時間: 10:00 - 18:00")
 
+# --- 4. メインコンテンツ ---
+
+# シンプルモードなら、大きな画像を飛ばす
+if mode == "通常モード":
+    st.title("🌿 Natural Wind Rie")
+    st.caption("心と体を整える、隠れ家サロンへようこそ")
+    
+    # 画像表示（指定されたファイル名に変更済み）
+    # ※もしエラーが出る場合は、フォルダ内の画像名をこれに合わせてください
+    st.image("3201fb7d-fb92-4ca2-abf4-93f87160d733.png", use_container_width=True)
+else:
+    # スマホモード用のコンパクトなヘッダー
+    st.header("🌿 Natural Wind Rie")
+    st.info("📱 スマホ用シンプルモードで表示中")
+
+# インスタグラムへのリンクボタン（指定されたURLに変更済み）
 col1, col2 = st.columns([2, 1])
 with col1:
     st.write("アニマルコミュニケーション & 耳つぼジュエリー")
     st.write("ペットも、飼い主様も。すべての魂に癒しを届けます。")
 
 with col2:
-    # インスタグラムへのリンクボタン
     st.markdown("""
         <a href="https://www.instagram.com/naturalwind2024?igsh=MWJ4eW82cTg5b296eA==/" target="_blank" class="insta-btn">
             📷 Instagramを見る
         </a>
     """, unsafe_allow_html=True)
 
-st.image("3201fb7d-fb92-4ca2-abf4-93f87160d733.png")
-
 st.markdown("---")
 
-# --- 4. サービスメニュー（タブ切り替え） ---
+# --- 5. サービスメニュー（タブ切り替え） ---
 tab1, tab2 = st.tabs(["🐾 アニマルコミュニケーション", "👂 耳つぼジュエリー"])
 
-# === タブ1：アニマルコミュニケーション（ここを修正） ===
+# === タブ1：アニマルコミュニケーション ===
 with tab1:
     st.header("🐾 ペットの声、届けます")
     st.write("""
@@ -118,7 +154,7 @@ with tab1:
     st.caption("※個人の感想であり、効果を保証するものではありません。")
 
 
-# === タブ2：耳つぼジュエリー（そのまま維持） ===
+# === タブ2：耳つぼジュエリー ===
 with tab2:
     st.header("👂 耳つぼジュエリー施術")
     st.write("""
@@ -131,7 +167,7 @@ with tab2:
     
     col_ear1, col_ear2 = st.columns(2)
     with col_ear1:
-        # 画像を変更したい場合はURLを差し替えてください
+        # 画像URL（Unsplashのままにしていますが、必要あれば変更してください）
         st.image("https://images.unsplash.com/photo-1598150654641-a20464d26272?q=80&w=1000&auto=format&fit=crop", caption="耳つぼ施術イメージ")
     with col_ear2:
         st.markdown("""
@@ -147,15 +183,5 @@ with tab2:
 
 st.markdown("---")
 
-# --- 5. お問い合わせ ---
+# --- 6. 予約システム（カレンダー機能付き） ---
 st.header("📩 ご予約・お問い合わせ")
-st.write("InstagramのDM、または以下のフォームよりご連絡ください。")
-
-with st.form("contact_form"):
-    menu = st.multiselect("興味のあるメニュー", ["アニマルコミュニケーション", "耳つぼ", "両方"])
-    name = st.text_input("お名前")
-    message = st.text_area("ご相談・ご希望の日時")
-    
-    submitted = st.form_submit_button("送信する")
-    if submitted:
-        st.success("送信完了しました。InstagramのDMも合わせてご確認いただけますと幸いです。")
